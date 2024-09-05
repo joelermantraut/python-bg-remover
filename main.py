@@ -1,6 +1,6 @@
 import sys
 # common
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFileDialog, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFileDialog, QVBoxLayout, QSlider, QProgressBar
 from PyQt5.QtCore import Qt
 # gui
 import rembg
@@ -40,6 +40,12 @@ class GUI(QWidget):
             QPushButton:hover {
                 background-color: #BBBDF6;
             }
+            QProgressBar {
+                background-color: #625F63;
+                border-radius: 10px;
+                color: #FFFFFF;
+                text-align: center;
+            }
         """)
 
         # Welcome label
@@ -58,6 +64,10 @@ class GUI(QWidget):
         btn_remove_bg = QPushButton('Borrar fondo', self)
         btn_remove_bg.clicked.connect(self.remove_background)
 
+        # Progress bar
+        self.progress_bar = QProgressBar(self)
+        self.progress_bar.setValue(0)
+
         # Button to close the application
         btn_close = QPushButton('Cerrar', self)
         btn_close.clicked.connect(self.close)
@@ -68,6 +78,7 @@ class GUI(QWidget):
         vbox.addWidget(btn_choose_images)
         vbox.addWidget(btn_choose_save)
         vbox.addWidget(btn_remove_bg)
+        vbox.addWidget(self.progress_bar)
         vbox.addWidget(btn_close)
 
         self.setLayout(vbox)
@@ -99,6 +110,9 @@ class GUI(QWidget):
 
     def remove_background(self):
         images = self.search_images(self.images_directory)
+        total_images = len(images)
+        processed_images = 0
+
         for image in images:
             image_filename = image.split(os.sep)[-1]
             image_filename = image_filename.split(".")
@@ -110,7 +124,12 @@ class GUI(QWidget):
             output_array = rembg.remove(input_array)
             output_image = Image.fromarray(output_array)
             output_image.save(f'{self.save_directory}/{image_filename}_output.png')
-            print("Image saved")
+
+            # Update progress
+            processed_images += 1
+            progress_percentage = int((processed_images / total_images) * 100)
+            self.progress_bar.setValue(progress_percentage)
+            print(f"Processed {processed_images}/{total_images} images")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
