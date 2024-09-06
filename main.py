@@ -1,6 +1,6 @@
 import sys
 # common
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFileDialog, QVBoxLayout, QSlider, QProgressBar
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFileDialog, QVBoxLayout, QSlider, QProgressBar, QMessageBox
 from PyQt5.QtCore import Qt
 # gui
 import rembg
@@ -95,23 +95,33 @@ class GUI(QWidget):
         if save_directory:
             print(f'Save directory selected: {save_directory}')
             self.save_directory = save_directory
-            print(self.save_directory)
 
-    def search_images(self, directory):
-        patterns = ['*.jpg', '*.jpeg', '*.png']
-        images = []
-
-        for path, _, files in os.walk(directory):
-            for pattern in patterns:
-                for file in fnmatch.filter(files, pattern):
-                    images.append(os.path.join(path, file))
-
-        return images
+    def show_error_message(self, message):
+        # Function to show an error message
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
+        msg.setWindowTitle("Error")
+        msg.setText(message)
+        msg.exec_()
 
     def remove_background(self):
+        # Check if image directory is selected
+        if not hasattr(self, 'images_directory'):
+            self.show_error_message("Debe seleccionar un directorio de imágenes antes de continuar.")
+            return
+
+        # Check if save directory is selected
+        if not hasattr(self, 'save_directory'):
+            self.show_error_message("Debe seleccionar un directorio de guardado antes de continuar.")
+            return
+
         images = self.search_images(self.images_directory)
         total_images = len(images)
         processed_images = 0
+
+        if total_images == 0:
+            self.show_error_message("No se encontraron imágenes en el directorio seleccionado.")
+            return
 
         for image in images:
             image_filename = image.split(os.sep)[-1]
