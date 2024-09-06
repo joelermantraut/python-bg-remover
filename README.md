@@ -3,7 +3,10 @@
 Script to remove background from multiples images in once.
 
 # Requirements
-
+ - PyQt5
+ - rembg
+ - numpy
+ - PIL
 
 ## Setup
 
