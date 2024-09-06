@@ -103,6 +103,18 @@ class GUI(QWidget):
         msg.setText(message)
         msg.exec_()
 
+    def search_images(self, directory):
+        extensions = ('.jpg', '.jpeg', '.png')  # Definir las extensiones válidas
+        images = []
+
+        # Recorrer el directorio
+        for path, _, files in os.walk(directory):
+            for file in files:
+                if file.lower().endswith(extensions):  # Verificar si el archivo tiene una extensión válida
+                    images.append(os.path.join(path, file))
+
+        return images
+
     def remove_background(self):
         # Check if image directory is selected
         if not hasattr(self, 'images_directory'):
