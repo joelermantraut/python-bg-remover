@@ -8,7 +8,6 @@ import numpy as np
 from PIL import Image
 # background remover
 import os
-import fnmatch
 # search images
 
 class GUI(QWidget):
