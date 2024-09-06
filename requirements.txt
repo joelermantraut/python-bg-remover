@@ -1,4 +1,2 @@
 PyQt5
 rembg
-numpy
-PIL
