@@ -10,11 +10,12 @@ Script to remove background from multiples images in once.
 
 ## Setup
 
-Setup to run on Windows.
+Setup to run on Windows. First run may take a minute (o two).
 
 1. Clone this repo.
 2. Run:
 ```
+cd ./python-bg-remover
 python -m venv .
 ./Scripts/activate
 python -m pip install --upgrade pip
